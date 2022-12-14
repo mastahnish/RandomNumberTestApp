@@ -4,6 +4,6 @@ import retrofit2.http.GET
 
 interface RandomNumberApi {
 
-    @GET("/v1.0/randomnumber")
-    suspend fun getNumber(): Int
+    @GET("v1.0/randomnumber")
+    suspend fun getNumber(): List<Int>
 }

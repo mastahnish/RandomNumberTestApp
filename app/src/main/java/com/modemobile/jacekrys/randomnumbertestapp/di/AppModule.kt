@@ -8,6 +8,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -16,12 +18,17 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+    private fun createClient() = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BASIC))
+        .build()
+
     @Provides
     @Singleton
     fun providesRandomNumberApi(): RandomNumberApi {
-        return Retrofit.Builder().baseUrl(Constants.BASE_URL).addConverterFactory(
-            GsonConverterFactory.create()
-        )
+        return Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .client(createClient())
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(RandomNumberApi::class.java)
     }

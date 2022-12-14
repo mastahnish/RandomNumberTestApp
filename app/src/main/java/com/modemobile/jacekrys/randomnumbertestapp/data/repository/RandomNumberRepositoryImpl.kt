@@ -9,7 +9,7 @@ class RandomNumberRepositoryImpl @Inject constructor (
 ) : RandomNumberRepository {
 
     override suspend fun getRandomNumber(): Int {
-        return api.getNumber()
+        return api.getNumber().first()
     }
 
 }
