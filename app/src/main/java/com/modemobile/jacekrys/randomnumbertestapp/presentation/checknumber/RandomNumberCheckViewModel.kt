@@ -1,11 +1,12 @@
 package com.modemobile.jacekrys.randomnumbertestapp.presentation.checknumber
 
+import android.content.SharedPreferences
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.modemobile.jacekrys.randomnumbertestapp.common.Constants
+import com.modemobile.jacekrys.randomnumbertestapp.common.Constants.FETCHED_RANDOM_NUMBER_KEY
+import com.modemobile.jacekrys.randomnumbertestapp.common.Constants.NUMBER_UNDEFINED
 import com.modemobile.jacekrys.randomnumbertestapp.common.Resource
 import com.modemobile.jacekrys.randomnumbertestapp.domain.usecase.getrandomnumber.GetRandomNumberUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,27 +17,22 @@ import javax.inject.Inject
 @HiltViewModel
 class RandomNumberCheckViewModel @Inject constructor(
     private val getRandomNumberUseCase: GetRandomNumberUseCase,
-    private val savedStateHandle: SavedStateHandle
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val _state = mutableStateOf(CheckNumberState())
     val state: State<CheckNumberState> = _state
 
     init {
-        val savedRandomNumber = getSavedRandomNumber()?.let{
-            _state.value = CheckNumberState(randomNumber = it)
-        }
-
-        if (savedRandomNumber == null) {
-            getRandomNumber()
-        }
+        _state.value = CheckNumberState(randomNumber = getSavedRandomNumber())
     }
 
-    private fun getRandomNumber() {
+    fun getRandomNumber() {
         getRandomNumberUseCase().onEach { result ->
             when(result) {
                 is Resource.Success -> {
-                    savedStateHandle[Constants.FETCHED_RANDOM_NUMBER_KEY] = result.data
+                    sharedPreferences.edit().putInt(FETCHED_RANDOM_NUMBER_KEY, result.data ?: NUMBER_UNDEFINED).apply()
+                    _state.value = CheckNumberState(isLoading = false, randomNumber = result.data)
                 }
                 is Resource.Error -> {
                     _state.value = CheckNumberState(
@@ -50,12 +46,12 @@ class RandomNumberCheckViewModel @Inject constructor(
         }.launchIn(viewModelScope)
     }
 
-    private fun getSavedRandomNumber() : Int? = savedStateHandle.get<Int>(Constants.FETCHED_RANDOM_NUMBER_KEY)
+    private fun getSavedRandomNumber() : Int = sharedPreferences.getInt(FETCHED_RANDOM_NUMBER_KEY, NUMBER_UNDEFINED)
 
-    fun checkUserNumber(userNumber : Int) {
-        val isNumberMatched = getSavedRandomNumber()?.equals(userNumber) ?: false
-        _state.value = CheckNumberState(randomNumber = getSavedRandomNumber(), isNumberMatched = isNumberMatched)
-        savedStateHandle[Constants.FETCHED_RANDOM_NUMBER_KEY] = null
-        getRandomNumber()
+    fun checkUserNumber(number : String) {
+        val numberInt = if(number.isNotBlank()) number.toInt() else Int.MIN_VALUE
+        val isNumberMatched = getSavedRandomNumber() == numberInt
+
+        _state.value = CheckNumberState(randomNumber = getSavedRandomNumber(), isNumberMatched = isNumberMatched, isNumberChecked = true)
     }
 }

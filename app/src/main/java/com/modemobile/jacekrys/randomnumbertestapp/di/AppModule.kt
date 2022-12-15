@@ -1,12 +1,16 @@
 package com.modemobile.jacekrys.randomnumbertestapp.di
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.modemobile.jacekrys.randomnumbertestapp.common.Constants
+import com.modemobile.jacekrys.randomnumbertestapp.common.Constants.USER_PREFERENCES
 import com.modemobile.jacekrys.randomnumbertestapp.data.remote.RandomNumberApi
 import com.modemobile.jacekrys.randomnumbertestapp.data.repository.RandomNumberRepositoryImpl
 import com.modemobile.jacekrys.randomnumbertestapp.domain.repository.RandomNumberRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -37,6 +41,12 @@ object AppModule {
     @Singleton
     fun provideRandomNumberRepository(api: RandomNumberApi): RandomNumberRepository {
         return RandomNumberRepositoryImpl(api)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences(USER_PREFERENCES, Context.MODE_PRIVATE)
     }
 
 }

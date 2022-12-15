@@ -21,7 +21,7 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun RandomNumberAppTheme(darkTheme: Boolean = true, content: @Composable() () -> Unit) {
+fun RandomNumberAppTheme(darkTheme: Boolean = false, content: @Composable() () -> Unit) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
