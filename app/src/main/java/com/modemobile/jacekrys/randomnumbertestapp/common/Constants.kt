@@ -10,6 +10,6 @@ object Constants {
     const val MAX_RANDOM_NUMBER = 5
     const val NUMBER_UNDEFINED = -1
 
-    const val USER_PREFERENCES = "com.example.myappname.user_prefs"
+    const val USER_PREFERENCES = "com.randomnumberapp.user_prefs"
 
 }
