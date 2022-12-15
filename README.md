@@ -25,7 +25,7 @@ In order to change range of random numbers please change `Constants.MIN_RANDOM_N
 
 https://user-images.githubusercontent.com/11060323/207820533-134e08c1-1756-48b3-8580-afead1bb2e17.mp4
 
-# Room for improvement:
+# Room for improvement
 - I might use SharedPreferences as a local repository and use it like this instead of tangling it into VM logic
 - Since in total I spent 3hrs as suggested in assessment description I didn't write Unit and Instrumented Tests. Normally those would be implemented as usual.
 
