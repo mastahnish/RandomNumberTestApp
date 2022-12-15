@@ -15,16 +15,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.Top
+import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -79,7 +78,7 @@ fun RandomNumberScreenUI(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .align(Center),
+                    .align(TopCenter),
                 contentPadding = PaddingValues(20.dp)
             ) {
                 item {
@@ -95,10 +94,9 @@ fun RandomNumberScreenUI(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    BasicTextField(
+                    OutlinedTextField(
                         value = textValue,
                         modifier = Modifier
-                            .border(2.dp, color = Color.Black)
                             .align(Center),
                         textStyle = TextStyle(fontSize = 56.sp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -106,6 +104,7 @@ fun RandomNumberScreenUI(
                             textValue = it
                         },
                         enabled = state.randomNumber != NUMBER_UNDEFINED,
+                        singleLine = true
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
